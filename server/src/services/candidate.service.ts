@@ -22,9 +22,10 @@ export class CandidateService {
       throw new Error('Candidate not found');
     }
 
-    if (status === CandidateStatus.REJECTED && !rejectionNote) {
-      throw new Error('Rejection note is required when rejecting a candidate');
-    }
+    // Validation removed: Rejection note is now optional.
+    // if (status === CandidateStatus.REJECTED && !rejectionNote) {
+    //   throw new Error('Rejection note is required when rejecting a candidate');
+    // }
 
     // Force note to be null if not rejected?
     const noteToSave = status === CandidateStatus.REJECTED ? rejectionNote : null;
