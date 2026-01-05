@@ -1,7 +1,24 @@
 import { Request, Response } from 'express';
+import { z } from 'zod';
 import { CandidateService } from '../../services/candidate.service';
 import { CandidateStatus, ExperienceLevel } from '../../data/models/candidate.model';
 import { CandidateFilters } from '../../data/repositories/candidate.repository';
+
+// Define Zod schemas for validation
+const CandidateStatusEnum = z.nativeEnum(CandidateStatus);
+const ExperienceLevelEnum = z.nativeEnum(ExperienceLevel);
+
+const GetCandidatesQuerySchema = z.object({
+  search: z.string().optional(),
+  status: CandidateStatusEnum.optional(),
+  experienceLevel: ExperienceLevelEnum.optional(),
+  sort: z.enum(['asc', 'desc']).optional(),
+});
+
+const UpdateStatusBodySchema = z.object({
+  status: CandidateStatusEnum,
+  rejectionNote: z.string().optional().nullable(),
+});
 
 export class CandidateController {
   private service: CandidateService;
@@ -12,13 +29,17 @@ export class CandidateController {
 
   getAll = async (req: Request, res: Response) => {
     try {
-      const filters: CandidateFilters = {
-        search: req.query.search as string,
-        // Optional: Add proper validation that these strings match Enum values
-        status: req.query.status as CandidateStatus,
-        experienceLevel: req.query.experienceLevel as ExperienceLevel,
-        sort: req.query.sort as 'asc' | 'desc',
-      };
+      // Validate query parameters
+      const validationResult = GetCandidatesQuerySchema.safeParse(req.query);
+
+      if (!validationResult.success) {
+        return res.status(400).json({ 
+          error: 'Invalid query parameters', 
+          details: validationResult.error.format() 
+        });
+      }
+
+      const filters = validationResult.data as CandidateFilters;
       const candidates = await this.service.getCandidates(filters);
       res.json({ data: candidates });
     } catch (error) {
@@ -44,18 +65,25 @@ export class CandidateController {
   updateStatus = async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
-      const { status, rejectionNote } = req.body;
+      
+      // Validate request body
+      const validationResult = UpdateStatusBodySchema.safeParse(req.body);
 
-      if (!status) {
-         return res.status(400).json({ error: 'Status is required' });
+      if (!validationResult.success) {
+        return res.status(400).json({ 
+          error: 'Invalid request body', 
+          details: validationResult.error.format() 
+        });
       }
 
-      const updated = await this.service.updateStatus(id, status, rejectionNote);
+      const { status, rejectionNote } = validationResult.data;
+
+      // Ensure rejectionNote is undefined if missing/null to match Service signature
+      const noteArg = rejectionNote === null ? undefined : rejectionNote;
+
+      const updated = await this.service.updateStatus(id, status, noteArg);
       res.json({ data: updated });
     } catch (error: any) {
-      // Basic approach: if service throws "Candidate not found", 404 would be better, but 400 covers "Bad Request" logic too.
-      // Differentiating errors would require customError classes.
-      // For now, checks message.
       if (error.message === 'Candidate not found') {
         return res.status(404).json({ error: error.message });
       }
