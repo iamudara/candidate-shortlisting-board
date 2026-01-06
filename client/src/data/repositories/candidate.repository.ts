@@ -2,13 +2,14 @@ import api from '../sources/api';
 import type { Candidate, CandidatesResponse, UpdateStatusRequest } from '../models/candidate.model';
 import { CandidateStatus } from '../models/candidate.model';
 
-interface CandidateFilters {
+export interface GetCandidatesParams {
   search?: string;
   status?: CandidateStatus | 'ALL';
-  sort?: 'asc' | 'desc';
+  sortOrder?: 'asc' | 'desc';
+  sortBy?: 'createdAt' | 'name';
 }
 
-export const fetchCandidates = async (params?: CandidateFilters): Promise<CandidatesResponse> => {
+export const fetchCandidates = async (params?: GetCandidatesParams): Promise<CandidatesResponse> => {
   try {
     const queryParams = new URLSearchParams();
     
@@ -21,8 +22,12 @@ export const fetchCandidates = async (params?: CandidateFilters): Promise<Candid
       queryParams.append('status', params.status);
     }
     
-    if (params?.sort) {
-      queryParams.append('sort', params.sort);
+    if (params?.sortOrder) {
+      queryParams.append('sortOrder', params.sortOrder);
+    }
+
+    if (params?.sortBy) {
+      queryParams.append('sortBy', params.sortBy);
     }
 
     const response = await api.get<CandidatesResponse>(`/candidates?${queryParams.toString()}`);

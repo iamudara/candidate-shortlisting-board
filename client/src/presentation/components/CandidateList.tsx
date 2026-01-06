@@ -20,9 +20,13 @@ export const CandidateList: React.FC = () => {
     isLoading,
     searchQuery,
     statusFilter,
+    sortBy,
+    sortOrder,
     selectCandidate,
     setSearchQuery,
     setStatusFilter,
+    setSortBy,
+    setSortOrder,
   } = useCandidates();
 
   // Local state for debounced search
@@ -67,19 +71,40 @@ export const CandidateList: React.FC = () => {
           />
         </div>
 
-        {/* Filter */}
-        <div className="flex items-center space-x-2">
+        {/* Sort & Filter */}
+        <div className="flex gap-2">
+          {/* Status Filter */}
           <Select value={statusFilter} onValueChange={handleStatusChange}>
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Filter by status" />
+            <SelectTrigger className="w-[140px]">
+              <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="ALL">All Statuses</SelectItem>
+              <SelectItem value="ALL">All Status</SelectItem>
               <SelectItem value={CandidateStatus.APPLIED}>Applied</SelectItem>
               <SelectItem value={CandidateStatus.SHORTLISTED}>
                 Shortlisted
               </SelectItem>
               <SelectItem value={CandidateStatus.REJECTED}>Rejected</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {/* Sort */}
+          <Select
+            value={`${sortBy}-${sortOrder}`}
+            onValueChange={(val) => {
+              const [field, order] = val.split("-");
+              setSortBy(field as "createdAt" | "name");
+              setSortOrder(order as "asc" | "desc");
+            }}
+          >
+            <SelectTrigger className="flex-1">
+              <SelectValue placeholder="Sort by" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="createdAt-desc">Newest First</SelectItem>
+              <SelectItem value="createdAt-asc">Oldest First</SelectItem>
+              <SelectItem value="name-asc">Name (A-Z)</SelectItem>
+              <SelectItem value="name-desc">Name (Z-A)</SelectItem>
             </SelectContent>
           </Select>
         </div>

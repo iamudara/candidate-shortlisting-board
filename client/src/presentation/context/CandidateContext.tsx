@@ -13,11 +13,13 @@ interface CandidateContextType {
   searchQuery: string;
   statusFilter: CandidateStatus | "ALL";
   sortOrder: "asc" | "desc";
+  sortBy: "createdAt" | "name";
 
   selectCandidate: (id: string | null) => void;
   setSearchQuery: (query: string) => void;
   setStatusFilter: (status: CandidateStatus | "ALL") => void;
   setSortOrder: (order: "asc" | "desc") => void;
+  setSortBy: (field: "createdAt" | "name") => void;
   refreshCandidates: () => Promise<void>;
   shortlistCandidate: (id: string) => Promise<void>;
   rejectCandidate: (id: string, note?: string) => Promise<void>;
@@ -42,6 +44,7 @@ export const CandidateProvider: React.FC<{ children: React.ReactNode }> = ({
     "ALL"
   );
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [sortBy, setSortBy] = useState<"createdAt" | "name">("createdAt");
 
   const selectedCandidate =
     candidates.find((c) => c.id === selectedCandidateId) || null;
@@ -53,7 +56,8 @@ export const CandidateProvider: React.FC<{ children: React.ReactNode }> = ({
       const response = await candidateRepository.fetchCandidates({
         search: searchQuery,
         status: statusFilter,
-        sort: sortOrder,
+        sortOrder,
+        sortBy,
       });
       setCandidates(response.candidates);
 
@@ -71,7 +75,7 @@ export const CandidateProvider: React.FC<{ children: React.ReactNode }> = ({
     } finally {
       setIsLoading(false);
     }
-  }, [searchQuery, statusFilter, sortOrder, selectedCandidateId]);
+  }, [searchQuery, statusFilter, sortOrder, sortBy, selectedCandidateId]);
 
   // Initial fetch and fetch on filter changes
   useEffect(() => {
@@ -143,10 +147,12 @@ export const CandidateProvider: React.FC<{ children: React.ReactNode }> = ({
     searchQuery,
     statusFilter,
     sortOrder,
+    sortBy,
     selectCandidate,
     setSearchQuery,
     setStatusFilter,
     setSortOrder,
+    setSortBy,
     refreshCandidates,
     shortlistCandidate,
     rejectCandidate,
