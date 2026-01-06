@@ -11,6 +11,19 @@ export enum CandidateStatus {
   REJECTED = 'REJECTED',
 }
 
+export interface Experience {
+  company: string;
+  role: string;
+  duration: string;
+  description: string;
+}
+
+export interface Education {
+  degree: string;
+  institution: string;
+  year: string;
+}
+
 export interface Candidate {
   id: string;
   name: string;
@@ -23,6 +36,11 @@ export interface Candidate {
   rejectionNote?: string | null;
   createdAt: string; 
   updatedAt: string;
+  // Extended details
+  location?: string;
+  bio?: string;
+  experience: Experience[];
+  education: Education[];
 }
 
 export interface CandidatesResponse {
