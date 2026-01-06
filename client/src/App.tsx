@@ -8,7 +8,7 @@ function App() {
   return (
     <CandidateProvider>
       <Home />
-      <Toaster />
+      <Toaster position="top-right" />
     </CandidateProvider>
   );
 }

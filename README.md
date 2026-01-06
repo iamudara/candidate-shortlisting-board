@@ -56,35 +56,36 @@ With more time, the following enhancements would be prioritized:
 1.  **Clone the repository:**
 
     ```bash
-    git clone <repository-url>
+    git clone https://github.com/iamudara/candidate-shortlisting-board.git
     cd candidate-shortlisting-board
     ```
 
-2.  **Install dependencies (Root, Client, Server):**
+2.  **Install dependencies:**
+
+    Detailed manual installation is available, but you can use our helper script:
 
     ```bash
-    # Root
+    # 1. Install root dependencies
     npm install
 
-    # Client
-    cd client
-    npm install
-
-    # Server
-    cd ../server
-    npm install
+    # 2. Install both Client and Server dependencies in one go
+    npm run install:all
     ```
 
 3.  **Environment Setup:**
 
-    - **Server:** Create `server/.env`
+    - **Server:**
+
+      1. Navigate to the `server` directory.
+      2. Rename `.env.example` to `.env`.
+      3. Open `.env` and fill in your actual database credentials (username/password).
 
       ```env
       DATABASE_URL="postgresql://postgres:password@localhost:5432/candidate_board?schema=public"
       PORT=3001
       ```
 
-    - **Client:** Create `client/.env` (optional, defaults to localhost:3001)
+
 
 4.  **Database Setup:**
     ```bash

@@ -48,7 +48,7 @@ export const RejectDialog: React.FC<RejectDialogProps> = ({
             Are you sure you want to reject <strong>{candidateName}</strong>?
             {isShortlisted
               ? " They are currently shortlisted. Rejecting them will remove them from the shortlist."
-              : " This action cannot be undone."}{" "}
+              : ""}{" "}
             You can optionally add a note explaining why.
           </DialogDescription>
         </DialogHeader>
