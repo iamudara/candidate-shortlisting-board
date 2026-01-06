@@ -3,7 +3,7 @@
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["driverAdapters"]
+  previewFeatures = []
 }
 
 datasource db {
@@ -30,6 +30,10 @@ model Candidate {
   role            String
   skills          String[]
   experienceLevel ExperienceLevel
+  bio             String?
+  location        String?
+  education       Json[]
+  experience      Json[]
   status          CandidateStatus @default(APPLIED)
   rejectionNote   String?
   createdAt       DateTime        @default(now())

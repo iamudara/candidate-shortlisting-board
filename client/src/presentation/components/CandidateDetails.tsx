@@ -173,13 +173,7 @@ export const CandidateDetails: React.FC = () => {
               Experience
             </h3>
             <div className="space-y-4">
-              {/* Transforming flat experience string or mock data if detailed structure existed.
-                        The current model has detailed structures! Let's check model.
-                        Wait, model definition (viewed in step 86 context):
-                        export interface Experience { company: string; role: string; duration: string; description: string; }
-                        export interface Candidate { ... experience: Experience[]; ... }
-                    */}
-              {selectedCandidate.experience.map((exp, index: number) => (
+              {selectedCandidate.experience?.map((exp, index: number) => (
                 <Card
                   key={index}
                   className="border-none shadow-none bg-transparent"
@@ -187,7 +181,8 @@ export const CandidateDetails: React.FC = () => {
                   <div className="flex gap-4">
                     <div className="mt-1">
                       <div className="h-2 w-2 rounded-full bg-gray-300 ring-4 ring-white" />
-                      {index !== selectedCandidate.experience.length - 1 && (
+                      {index !==
+                        (selectedCandidate.experience?.length || 0) - 1 && (
                         <div className="w-0.5 h-full bg-gray-200 ml-0.5 mt-2" />
                       )}
                     </div>
@@ -201,6 +196,12 @@ export const CandidateDetails: React.FC = () => {
                   </div>
                 </Card>
               ))}
+              {(!selectedCandidate.experience ||
+                selectedCandidate.experience.length === 0) && (
+                <p className="text-sm text-muted-foreground italic">
+                  No experience listed.
+                </p>
+              )}
             </div>
           </section>
 
@@ -213,7 +214,7 @@ export const CandidateDetails: React.FC = () => {
               Education
             </h3>
             <div className="space-y-4">
-              {selectedCandidate.education.map((edu, index: number) => (
+              {selectedCandidate.education?.map((edu, index: number) => (
                 <div key={index} className="flex gap-4">
                   <div className="mt-1">
                     <div className="h-2 w-2 rounded-full bg-gray-300 ring-4 ring-white" />
@@ -226,6 +227,12 @@ export const CandidateDetails: React.FC = () => {
                   </div>
                 </div>
               ))}
+              {(!selectedCandidate.education ||
+                selectedCandidate.education.length === 0) && (
+                <p className="text-sm text-muted-foreground italic">
+                  No education listed.
+                </p>
+              )}
             </div>
           </section>
         </div>

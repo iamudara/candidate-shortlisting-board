@@ -19,6 +19,10 @@ export interface Candidate {
   role: string;
   skills: string[];
   experienceLevel: ExperienceLevel;
+  education: any[]; // Using any[] for JSON fields for now, can be stricter later
+  experience: any[];
+  bio?: string | null;
+  location?: string | null;
   status: CandidateStatus;
   rejectionNote?: string | null;
   createdAt: Date;

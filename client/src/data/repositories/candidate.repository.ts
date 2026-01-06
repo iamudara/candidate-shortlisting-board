@@ -32,35 +32,7 @@ export const fetchCandidates = async (params?: GetCandidatesParams): Promise<Can
 
     const response = await api.get<CandidatesResponse>(`/candidates?${queryParams.toString()}`);
     
-    // MOCK DATA INJECTION (Temporary until backend update)
-    const mockedCandidates = response.data.candidates.map(c => ({
-      ...c,
-      location: 'New York, USA',
-      bio: 'Experienced software engineer with a passion for building scalable web applications. Proven track record of delivering high-quality code and leading teams.',
-      experience: [
-        {
-          company: 'Tech Corp',
-          role: 'Senior Developer',
-          duration: '2020 - Present',
-          description: 'Leading the frontend team, migrating legacy app to React.'
-        },
-        {
-          company: 'Startup Inc',
-          role: 'Full Stack Dev',
-          duration: '2018 - 2020',
-          description: 'Built the MVP from scratch using Node.js and React.'
-        }
-      ],
-      education: [
-        {
-          degree: 'B.S. Computer Science',
-          institution: 'State University',
-          year: '2018'
-        }
-      ]
-    }));
-
-    return { ...response.data, candidates: mockedCandidates };
+    return response.data;
   } catch (error) {
     console.error('Error fetching candidates:', error);
     throw new Error('Failed to fetch candidates. Please try again later.');
@@ -71,27 +43,7 @@ export const fetchCandidateById = async (id: string): Promise<Candidate> => {
   try {
     const response = await api.get<Candidate>(`/candidates/${id}`);
     
-    // MOCK DATA INJECTION
-    return {
-      ...response.data,
-      location: 'New York, USA',
-      bio: 'Experienced software engineer with a passion for building scalable web applications.',
-      experience: [
-        {
-            company: 'Tech Corp',
-            role: 'Senior Developer',
-            duration: '2020 - Present',
-            description: 'Leading the frontend team.'
-        }
-      ],
-      education: [
-        {
-            degree: 'B.S. Computer Science',
-            institution: 'State University',
-            year: '2018'
-        }
-      ]
-    };
+    return response.data;
   } catch (error) {
     console.error(`Error fetching candidate ${id}:`, error);
     throw new Error('Failed to fetch candidate details.');
