@@ -9,7 +9,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../components/ui/select";
-import { ScrollArea } from "../../components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Search } from "lucide-react";
 import { CandidateStatus } from "../../data/models/candidate.model";
 
@@ -118,10 +119,17 @@ export const CandidateList: React.FC = () => {
         {isLoading && candidates.length === 0 ? (
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (
-              <div
-                key={i}
-                className="h-32 bg-gray-100 animate-pulse rounded-lg"
-              />
+              <div key={i} className="space-y-2 p-4 border rounded-lg">
+                <div className="flex justify-between">
+                  <Skeleton className="h-5 w-1/3" />
+                  <Skeleton className="h-5 w-16 rounded-full" />
+                </div>
+                <Skeleton className="h-4 w-1/4" />
+                <div className="flex gap-2 pt-2">
+                  <Skeleton className="h-4 w-12" />
+                  <Skeleton className="h-4 w-12" />
+                </div>
+              </div>
             ))}
           </div>
         ) : candidates.length === 0 ? (

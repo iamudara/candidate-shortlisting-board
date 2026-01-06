@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useCandidates } from "../hooks/useCandidates";
+import { useIsMobile } from "../hooks/use-mobile";
 import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
 import { Separator } from "../../components/ui/separator";
@@ -21,6 +22,7 @@ import { RejectDialog } from "./RejectDialog";
 export const CandidateDetails: React.FC = () => {
   const { selectedCandidate, shortlistCandidate, rejectCandidate } =
     useCandidates();
+  const isMobile = useIsMobile();
 
   const [isRejectOpen, setIsRejectOpen] = useState(false);
 
@@ -64,7 +66,11 @@ export const CandidateDetails: React.FC = () => {
   return (
     <div className="h-full flex flex-col bg-white">
       {/* Header */}
-      <div className="p-6 border-b bg-gray-50/30">
+      <div
+        className={`border-b bg-gray-50/30 ${
+          isMobile ? "pt-12 px-6 pb-6" : "p-6"
+        }`}
+      >
         <div className="flex justify-between items-start">
           <div>
             <h2 className="text-2xl font-bold text-gray-900">
@@ -90,9 +96,6 @@ export const CandidateDetails: React.FC = () => {
             >
               {selectedCandidate.status}
             </Badge>
-            {/* Social Links (Mocked logic for now as they aren't in the model explicit fields but usually would be) 
-                    Assuming basic contact info is all we have for now from the model. 
-                */}
           </div>
         </div>
       </div>
@@ -239,11 +242,14 @@ export const CandidateDetails: React.FC = () => {
       </ScrollArea>
 
       {/* Action Footer */}
-      <div className="p-4 border-t bg-gray-50 flex justify-end gap-3">
+      <div className="p-4 border-t bg-gray-50 flex justify-center gap-3">
         <Button
           variant={isRejected ? "outline" : "destructive"}
           onClick={handleRejectClick}
           disabled={isRejected}
+          className={`focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none ${
+            isMobile ? "h-12 mb-2" : ""
+          }`}
         >
           <XCircle className="w-4 h-4 mr-2" />
           {isRejected ? "Rejected" : "Reject Candidate"}
@@ -253,9 +259,11 @@ export const CandidateDetails: React.FC = () => {
           disabled={isShortlisted}
           variant={isShortlisted ? "secondary" : "default"}
           className={
-            isShortlisted
+            (isShortlisted
               ? "bg-green-100 text-green-800 hover:bg-green-200"
-              : "bg-green-600 hover:bg-green-700 text-white"
+              : "bg-green-600 hover:bg-green-700 text-white") +
+            " focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none border-none " +
+            (isMobile ? "h-12 mb-2" : "")
           }
         >
           <CheckCircle className="w-4 h-4 mr-2" />

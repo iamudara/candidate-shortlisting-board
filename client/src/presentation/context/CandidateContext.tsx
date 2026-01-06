@@ -1,4 +1,5 @@
 import React, { createContext, useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
 import {
   CandidateStatus,
   type Candidate,
@@ -102,10 +103,13 @@ export const CandidateProvider: React.FC<{ children: React.ReactNode }> = ({
       await candidateRepository.updateCandidateStatus(id, {
         status: CandidateStatus.SHORTLISTED,
       });
+      toast.success("Candidate shortlisted successfully");
     } catch (err) {
       // 3. Revert on failure
       setCandidates(originalCandidates);
-      setError("Failed to shortlist candidate. Please try again.");
+      const msg = "Failed to shortlist candidate. Please try again.";
+      setError(msg);
+      toast.error(msg);
       console.error(err);
     }
   };
@@ -131,10 +135,13 @@ export const CandidateProvider: React.FC<{ children: React.ReactNode }> = ({
         status: CandidateStatus.REJECTED,
         rejectionNote: note,
       });
+      toast.success("Candidate rejected");
     } catch (err) {
       // 3. Revert on failure
       setCandidates(originalCandidates);
-      setError("Failed to reject candidate. Please try again.");
+      const msg = "Failed to reject candidate. Please try again.";
+      setError(msg);
+      toast.error(msg);
       console.error(err);
     }
   };
