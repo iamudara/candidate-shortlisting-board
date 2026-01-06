@@ -110,14 +110,15 @@ npm run dev
 ```
 ├── client/                 # React Frontend
 │   ├── src/
+│   │   ├── components/    # shadcn/ui Components
 │   │   ├── data/          # API & Models
-│   │   ├── presentation/  # UI Components & Pages
+│   │   ├── presentation/  # Feature Components, Pages & Hooks
 │   │   └── lib/           # Utilities
 ├── server/                 # Express Backend
 │   ├── src/
 │   │   ├── data/          # Database Repositories
 │   │   ├── services/      # Business Logic
-│   │   └── controllers/   # Route Handlers
+│   │   └── presentation/  # Controllers & Routes
 │   └── prisma/            # Database Schema & Seeds
 └── package.json            # Root configuration
 ```
