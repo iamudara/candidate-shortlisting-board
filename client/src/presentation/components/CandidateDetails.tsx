@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useCandidates } from "../hooks/useCandidates";
 import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
@@ -16,9 +16,13 @@ import {
   XCircle,
   Download,
 } from "lucide-react";
+import { RejectDialog } from "./RejectDialog";
 
 export const CandidateDetails: React.FC = () => {
-  const { selectedCandidate, shortlistCandidate } = useCandidates();
+  const { selectedCandidate, shortlistCandidate, rejectCandidate } =
+    useCandidates();
+
+  const [isRejectOpen, setIsRejectOpen] = useState(false);
 
   // Placeholder for Reject Dialog state (Task 4.8)
   // const [isRejectOpen, setIsRejectOpen] = useState(false);
@@ -49,8 +53,12 @@ export const CandidateDetails: React.FC = () => {
   };
 
   const handleRejectClick = () => {
-    // TODO: Open Reject Dialog (Task 4.8)
-    console.log("Open Reject Dialog");
+    setIsRejectOpen(true);
+  };
+
+  const handleConfirmReject = async (note: string) => {
+    await rejectCandidate(selectedCandidate.id, note); // Wait for optimistic/api
+    setIsRejectOpen(false);
   };
 
   return (
@@ -228,7 +236,7 @@ export const CandidateDetails: React.FC = () => {
         <Button
           variant="destructive"
           onClick={handleRejectClick}
-          disabled={isRejected} // Can we reject a rejected candidate? No need.
+          disabled={isRejected}
         >
           <XCircle className="w-4 h-4 mr-2" />
           Reject Candidate
@@ -243,7 +251,12 @@ export const CandidateDetails: React.FC = () => {
         </Button>
       </div>
 
-      {/* Reject Dialog will be here */}
+      <RejectDialog
+        isOpen={isRejectOpen}
+        onClose={() => setIsRejectOpen(false)}
+        onConfirm={handleConfirmReject}
+        candidateName={selectedCandidate.name}
+      />
     </div>
   );
 };
