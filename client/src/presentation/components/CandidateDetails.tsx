@@ -234,17 +234,22 @@ export const CandidateDetails: React.FC = () => {
       {/* Action Footer */}
       <div className="p-4 border-t bg-gray-50 flex justify-end gap-3">
         <Button
-          variant="destructive"
+          variant={isRejected ? "outline" : "destructive"}
           onClick={handleRejectClick}
           disabled={isRejected}
         >
           <XCircle className="w-4 h-4 mr-2" />
-          Reject Candidate
+          {isRejected ? "Rejected" : "Reject Candidate"}
         </Button>
         <Button
           onClick={handleShortlist}
-          disabled={isShortlisted || isRejected}
-          className="bg-green-600 hover:bg-green-700 text-white"
+          disabled={isShortlisted}
+          variant={isShortlisted ? "secondary" : "default"}
+          className={
+            isShortlisted
+              ? "bg-green-100 text-green-800 hover:bg-green-200"
+              : "bg-green-600 hover:bg-green-700 text-white"
+          }
         >
           <CheckCircle className="w-4 h-4 mr-2" />
           {isShortlisted ? "Shortlisted" : "Shortlist Candidate"}
@@ -256,6 +261,7 @@ export const CandidateDetails: React.FC = () => {
         onClose={() => setIsRejectOpen(false)}
         onConfirm={handleConfirmReject}
         candidateName={selectedCandidate.name}
+        isShortlisted={isShortlisted}
       />
     </div>
   );

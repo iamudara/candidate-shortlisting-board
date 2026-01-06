@@ -15,6 +15,7 @@ interface RejectDialogProps {
   onClose: () => void;
   onConfirm: (note: string) => void;
   candidateName: string;
+  isShortlisted?: boolean;
 }
 
 export const RejectDialog: React.FC<RejectDialogProps> = ({
@@ -22,6 +23,7 @@ export const RejectDialog: React.FC<RejectDialogProps> = ({
   onClose,
   onConfirm,
   candidateName,
+  isShortlisted,
 }) => {
   const [note, setNote] = useState("");
 
@@ -44,8 +46,10 @@ export const RejectDialog: React.FC<RejectDialogProps> = ({
           <DialogTitle>Reject Candidate</DialogTitle>
           <DialogDescription>
             Are you sure you want to reject <strong>{candidateName}</strong>?
-            This action cannot be undone. You can optionally add a note
-            explaining why.
+            {isShortlisted
+              ? " They are currently shortlisted. Rejecting them will remove them from the shortlist."
+              : " This action cannot be undone."}{" "}
+            You can optionally add a note explaining why.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
