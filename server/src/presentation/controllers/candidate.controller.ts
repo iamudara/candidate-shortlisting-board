@@ -12,7 +12,8 @@ const GetCandidatesQuerySchema = z.object({
   search: z.string().optional(),
   status: CandidateStatusEnum.optional(),
   experienceLevel: ExperienceLevelEnum.optional(),
-  sort: z.enum(['asc', 'desc']).optional(),
+  sortOrder: z.enum(['asc', 'desc']).optional(),
+  sortBy: z.enum(['createdAt', 'name']).optional(),
 });
 
 const UpdateStatusBodySchema = z.object({
@@ -39,9 +40,11 @@ export class CandidateController {
         });
       }
 
+      // Map 'sort' query param to 'sortOrder' for backward compatibility if needed, 
+      // but let's stick to the schema.
       const filters = validationResult.data as CandidateFilters;
       const candidates = await this.service.getCandidates(filters);
-      res.json({ data: candidates });
+      res.json({ candidates, total: candidates.length });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Internal Server Error' });
@@ -55,7 +58,7 @@ export class CandidateController {
       if (!candidate) {
         return res.status(404).json({ error: 'Candidate not found' });
       }
-      res.json({ data: candidate });
+      res.json(candidate);
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Internal Server Error' });
@@ -82,7 +85,7 @@ export class CandidateController {
       const noteArg = rejectionNote === null ? undefined : rejectionNote;
 
       const updated = await this.service.updateStatus(id, status, noteArg);
-      res.json({ data: updated });
+      res.json(updated);
     } catch (error: any) {
       if (error.message === 'Candidate not found') {
         return res.status(404).json({ error: error.message });

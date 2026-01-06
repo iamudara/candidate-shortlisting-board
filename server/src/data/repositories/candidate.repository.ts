@@ -6,7 +6,8 @@ export interface CandidateFilters {
   search?: string;
   status?: CandidateStatus;
   experienceLevel?: ExperienceLevel;
-  sort?: 'asc' | 'desc';
+  sortOrder?: 'asc' | 'desc';
+  sortBy?: 'createdAt' | 'name';
 }
 
 export class CandidateRepository {
@@ -27,9 +28,12 @@ export class CandidateRepository {
       ];
     }
 
+    const sortBy = filters?.sortBy || 'createdAt';
+    const sortOrder = filters?.sortOrder || 'desc';
+
     const candidates = await prisma.candidate.findMany({
       where,
-      orderBy: { createdAt: filters?.sort || 'desc' },
+      orderBy: { [sortBy]: sortOrder },
     });
     return candidates as unknown as Candidate[];
   }
